@@ -713,7 +713,7 @@ def Test_nested_function()
 
   lines =<< trim END
       vim9script
-      def s:_Func()
+      def _Func()
         echo 'bad'
       enddef
   END
@@ -930,7 +930,7 @@ def Test_global_local_function()
       def g:Funcy()
         echo 'funcy'
       enddef
-      s:Funcy()
+      Funcy()
   END
   v9.CheckScriptFailure(lines, 'E117:')
 enddef
@@ -1441,10 +1441,10 @@ enddef
 def Test_use_script_func_name_with_prefix()
   var lines =<< trim END
       vim9script
-      func s:Getit()
+      func g:Getit()
         return 'it'
       endfunc
-      var Fn = s:Getit
+      var Fn = g:Getit
       assert_equal('it', Fn())
   END
   v9.CheckScriptSuccess(lines)
@@ -2849,7 +2849,7 @@ def Test_nested_inline_lambda()
   lines =<< trim END
       vim9script
 
-      def s:Func()
+      def Func()
         range(10)
           ->mapnew((_, _) => ({
             key: range(10)->mapnew((_, _) => {
@@ -3168,7 +3168,7 @@ def Test_invalid_function_name()
       vim9script
       def s: list<string>
   END
-  v9.CheckScriptFailure(lines, 'E129:')
+  v9.CheckScriptFailure(lines, 'E1268:')
 
   lines =<< trim END
       vim9script
@@ -3762,7 +3762,15 @@ def Test_go_beyond_end_of_cmd()
   v9.CheckScriptFailure(lines, 'E476:')
 enddef
 
+" The following messes up syntax highlight, keep near the end.
 if has('python3')
+  def Test_python3_command()
+    py3 import vim
+    py3 vim.command("g:done = 'yes'")
+    assert_equal('yes', g:done)
+    unlet g:done
+  enddef
+
   def Test_python3_heredoc()
     py3 << trim EOF
       import vim
@@ -3778,7 +3786,6 @@ if has('python3')
   enddef
 endif
 
-" This messes up syntax highlight, keep near the end.
 if has('lua')
   def Test_lua_heredoc()
     g:d = {}

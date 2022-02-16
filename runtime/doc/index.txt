@@ -1,4 +1,4 @@
-*index.txt*     For Vim version 8.2.  Last change: 2022 Jan 28
+*index.txt*     For Vim version 8.2.  Last change: 2022 Feb 09
 
 
 		  VIM REFERENCE MANUAL    by Bram Moolenaar
